@@ -2,7 +2,6 @@
 //  TipCalculatorApp
 //  Created by Ronish, Torment on 1/29/25.
 import SwiftUI
-@main
 struct ContentView:View{
     @State private var billAmount:Double=0
     @State private var tipPercentage:Double=0
@@ -43,6 +42,7 @@ struct ContentView:View{
                 }
                 .frame(minWidth:0,maxWidth:100)
                 .buttonStyle(.bordered)
+                .shadow(radius: 20)
             }
         }
         VStack{//bill slider
@@ -52,6 +52,11 @@ struct ContentView:View{
             Slider(value:$billAmount,in:0...500)
                 .accentColor(.green)
                 .padding(.horizontal,20)
+                .onChange(of: billAmount){
+                    tipAmount=billAmount*(tipPercentage*0.01)
+                    totalAmount=billAmount+tipAmount
+                    amountPerPerson=totalAmount/numberOfPeople
+                }
         }
         VStack{//percent slider
             Text("Tip Percentage: \(tipPercentage,format:.number.rounded(increment:0.01))%")
@@ -60,6 +65,11 @@ struct ContentView:View{
             Slider(value:$tipPercentage,in:0...30)
                 .accentColor(.green)
                 .padding(.horizontal,20)
+                .onChange(of: tipPercentage){
+                    tipAmount=billAmount*(tipPercentage*0.01)
+                    totalAmount=billAmount+tipAmount
+                    amountPerPerson=totalAmount/numberOfPeople
+                }
         }
         VStack{//people slider
             Text("Number of People: \(numberOfPeople,format:.number.rounded(increment:1.0))")
@@ -68,6 +78,12 @@ struct ContentView:View{
             Slider(value:$numberOfPeople,in:1...20)
                 .accentColor(.green)
                 .padding(.horizontal,20)
+                .padding(.bottom)
+                .onChange(of: numberOfPeople){
+                    tipAmount=billAmount*(tipPercentage*0.01)
+                    totalAmount=billAmount+tipAmount
+                    amountPerPerson=totalAmount/numberOfPeople
+                }
         }
         VStack{//calculate button
             Button{
@@ -87,19 +103,19 @@ struct ContentView:View{
                     .foregroundStyle(.black)
             }
             .frame(minWidth:100,maxWidth:120,minHeight:30,maxHeight:40)
-            .buttonStyle(.bordered)
-            .background(.blue)// make red when pressed
+            .background(showResults ? .red : .blue)
             .cornerRadius(15)
-            .controlSize(.extraLarge)
+            .shadow(radius: 20)
             if showResults==true{
                 VStack{
-                    Text("Look at me\n hello also\nokay last time")// fix
+                    Text("Tip Amount: \(symbol)\(tipAmount,format:.number.rounded(increment:0.01))\nTotal Amount: \(symbol)\(totalAmount,format:.number.rounded(increment:0.01))\nAmount per Person: \(symbol)\(amountPerPerson,format:.number.rounded(increment:0.01))")
                         .padding(10)
                         .fontWeight(.semibold)
-                        .font(.system(size:25))
+                        .font(.system(size:20))
                         .multilineTextAlignment(.center)
-                        .background(.gray,ignoresSafeAreaEdges:.bottom)
+                        .background(.gray)
                         .cornerRadius(15)
+                        .shadow(radius: 20)
                 }
             }
         }
