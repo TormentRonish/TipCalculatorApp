@@ -2,6 +2,7 @@
 //  TipCalculatorApp
 //  Created by Ronish, Torment on 1/29/25.
 import SwiftUI
+@main
 struct ContentView:View{
     @State private var billAmount:Double=0
     @State private var tipPercentage:Double=0
